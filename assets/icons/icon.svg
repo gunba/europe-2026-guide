@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="108" fill="#225c4a"/>
+  <path d="M92 340c58-98 120-135 188-110 48 17 86 4 140-63" fill="none" stroke="#deece6" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="92" cy="340" r="25" fill="#fffdf8"/>
+  <circle cx="420" cy="167" r="25" fill="#fffdf8"/>
+  <text x="256" y="177" text-anchor="middle" font-family="Arial, sans-serif" font-size="116" font-weight="700" fill="#fffdf8">26</text>
+  <text x="256" y="432" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="700" fill="#fffdf8">EUROPE</text>
+</svg>
