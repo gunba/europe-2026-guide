@@ -6,7 +6,7 @@
   "scope": "./",
   "display": "standalone",
   "background_color": "#fffdf8",
-  "theme_color": "#225c4a",
+  "theme_color": "#fffdf8",
   "description": "An offline operational guide for Europe 2026.",
   "icons": [
     {
