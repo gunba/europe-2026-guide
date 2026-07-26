@@ -1,10 +1,43 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fffdf8"><meta name="robots" content="noindex,nofollow,noarchive"><title>Private trip guide</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/icons/icon-192.png"><style>
-:root{color-scheme:light;--bg:#e9e5dc;--panel:#fffdf8;--text:#1c2521;--muted:#68716d;--accent:#225c4a;--line:#d6d0c3}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif}.card{width:min(440px,calc(100% - 28px));padding:26px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 48px rgba(0,0,0,.18)}h1{margin:0 0 8px;font-size:1.5rem}p{color:var(--muted)}label{display:grid;gap:6px;font-weight:700}input,button{width:100%;min-height:48px;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit}input{background:var(--panel);color:var(--text)}button{margin-top:12px;background:var(--accent);color:white;font-weight:800;cursor:pointer}button:disabled{cursor:wait;opacity:.78}.status{min-height:24px;margin-top:10px;color:var(--muted)}.status.error{color:#a74338}.small{font-size:.82rem}
-</style></head><body><main class="card"><h1>Private trip guide</h1><p>Enter the trip passphrase. The browser decrypts the itinerary on this device. The passphrase is not sent to GitHub.</p><form id="unlock"><label>Passphrase<input id="passphrase" type="password" autocomplete="current-password" required autofocus></label><button id="button">Unlock guide</button></form><div id="status" class="status" role="status" aria-live="polite"></div><p class="small">The guide opens first. Its encrypted reservation documents then become available offline in the background.</p></main><script>
+:root{color-scheme:light;--bg:#e9e5dc;--panel:#fffdf8;--text:#1c2521;--muted:#68716d;--accent:#225c4a;--line:#d6d0c3}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif}.card{width:min(440px,calc(100% - 28px));padding:26px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 48px rgba(0,0,0,.18)}h1{margin:0 0 8px;font-size:1.5rem}p{color:var(--muted)}label{display:grid;gap:6px;font-weight:700}input,button{width:100%;min-height:48px;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit}input{background:var(--panel);color:var(--text)}button{margin-top:12px;background:var(--accent);color:white;font-weight:800;cursor:pointer}button:disabled{cursor:wait;opacity:.78}.remember{display:flex;align-items:flex-start;gap:9px;margin-top:12px;font-weight:700}.remember input{width:20px;min-height:20px;margin:2px 0 0;padding:0;flex:0 0 auto}.status{min-height:24px;margin-top:10px;color:var(--muted)}.status.error{color:#a74338}.small{font-size:.82rem}
+</style></head><body><main class="card"><h1>Private trip guide</h1><p>Enter the trip passphrase. The browser decrypts the itinerary on this device. The passphrase is not sent to GitHub.</p><form id="unlock"><label>Passphrase<input id="passphrase" type="password" autocomplete="current-password" required></label><label class="remember"><input id="remember" type="checkbox" checked><span>Keep this device unlocked</span></label><p class="small">This stores an unlock key, not the passphrase, in this browser. Anyone with access to this browser profile can open the private guide.</p><button id="button">Unlock guide</button></form><div id="status" class="status" role="status" aria-live="polite"></div><p class="small">The guide opens first. Its encrypted reservation documents then become available offline in the background.</p></main><script>
 const from64=value=>Uint8Array.from(atob(value),c=>c.charCodeAt(0));
 const to64=value=>btoa(String.fromCharCode(...value));
-const payloadPromise=fetch('./app.enc?v=b0577adb8223af75',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('The encrypted guide file is not available.');return r.json();});
-document.getElementById('unlock').addEventListener('submit',async event=>{event.preventDefault();const button=document.getElementById('button'),status=document.getElementById('status');button.disabled=true;button.textContent='Preparing secure key…';status.classList.remove('error');status.textContent='Checking the passphrase. This can take several seconds on a phone.';try{const payload=await payloadPromise,material=await crypto.subtle.importKey('raw',new TextEncoder().encode(document.getElementById('passphrase').value),'PBKDF2',false,['deriveBits']),bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:from64(payload.salt),iterations:payload.iterations},material,256),rawKey=new Uint8Array(bits),key=await crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['decrypt']);button.textContent='Opening guide…';status.textContent='Passphrase checked. Opening the guide now.';const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:from64(payload.iv),additionalData:from64(payload.aad),tagLength:128},key,from64(payload.data)),html=new TextDecoder().decode(plain);sessionStorage.setItem('europe2026DocumentKey',to64(rawKey));document.getElementById('passphrase').value='';document.open();document.write(html);document.close();}catch(err){console.error(err);sessionStorage.removeItem('europe2026DocumentKey');status.classList.add('error');status.textContent=err?.name==='OperationError'?'The passphrase is not correct, or the encrypted guide is damaged.':(err?.message||'The guide could not be opened.');button.disabled=false;button.textContent='Unlock guide';}});
+const rememberedUnlockKey='europe2026RememberedUnlock:v1';
+const documentSessionKey='europe2026DocumentKey';
+const button=document.getElementById('button'),status=document.getElementById('status'),passphraseInput=document.getElementById('passphrase'),rememberInput=document.getElementById('remember');
+const payloadPromise=fetch('./app.enc?v=ccadd03bb0a04dff',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('The encrypted guide file is not available.');return r.json();});
+const readRememberedKey=()=>{try{return localStorage.getItem(rememberedUnlockKey);}catch{return null;}};
+const saveRememberedKey=value=>{try{localStorage.setItem(rememberedUnlockKey,value);return true;}catch{return false;}};
+const clearRememberedKey=()=>{try{localStorage.removeItem(rememberedUnlockKey);}catch{}}
+async function openGuide(payload,rawKey){
+  const key=await crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['decrypt']);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:from64(payload.iv),additionalData:from64(payload.aad),tagLength:128},key,from64(payload.data));
+  const html=new TextDecoder().decode(plain);
+  sessionStorage.setItem(documentSessionKey,to64(rawKey));
+  passphraseInput.value='';
+  document.open();document.write(html);document.close();
+}
+document.getElementById('unlock').addEventListener('submit',async event=>{
+  event.preventDefault();button.disabled=true;button.textContent='Preparing secure key…';status.classList.remove('error');status.textContent='Checking the passphrase. This can take several seconds on a phone.';
+  try{
+    const payload=await payloadPromise;
+    const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(passphraseInput.value),'PBKDF2',false,['deriveBits']);
+    const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:from64(payload.salt),iterations:payload.iterations},material,256);
+    const rawKey=new Uint8Array(bits);
+    await crypto.subtle.decrypt({name:'AES-GCM',iv:from64(payload.iv),additionalData:from64(payload.aad),tagLength:128},await crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['decrypt']),from64(payload.data));
+    if(rememberInput.checked){if(!saveRememberedKey(to64(rawKey)))throw new Error('This browser could not save the device unlock key.');}else clearRememberedKey();
+    button.textContent='Opening guide…';status.textContent='Passphrase checked. Opening the guide now.';
+    await openGuide(payload,rawKey);
+  }catch(err){console.error(err);sessionStorage.removeItem(documentSessionKey);status.classList.add('error');status.textContent=err?.name==='OperationError'?'The passphrase is not correct, or the encrypted guide is damaged.':(err?.message||'The guide could not be opened.');button.disabled=false;button.textContent='Unlock guide';}
+});
+async function autoUnlock(){
+  const remembered=readRememberedKey();if(!remembered){passphraseInput.focus();return;}
+  button.disabled=true;button.textContent='Opening saved guide…';status.textContent='Using this device’s saved unlock key.';
+  try{await openGuide(await payloadPromise,from64(remembered));}
+  catch(err){console.error(err);clearRememberedKey();sessionStorage.removeItem(documentSessionKey);status.classList.add('error');status.textContent='The saved unlock no longer matches this guide. Enter the passphrase once to save the new unlock key.';button.disabled=false;button.textContent='Unlock guide';passphraseInput.focus();}
+}
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js');
+autoUnlock();
 </script></body></html>
