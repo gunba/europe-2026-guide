@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="../icons/icon-192.png">
+  <title>Louvre room-by-room route maps</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1220;--panel:#111c30;--text:#f4f7fb;--muted:#b8c4d6;--line:#273753;--accent:#70a7ff}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+    header,main{width:min(100%,1100px);margin:auto;padding:18px}
+    header{padding-bottom:8px}
+    h1{font-size:clamp(1.5rem,5vw,2.3rem);line-height:1.1;margin:0 0 10px}
+    p{margin:6px 0;color:var(--muted)}
+    nav{display:flex;gap:8px;overflow:auto;padding:12px 0 6px;position:sticky;top:0;background:linear-gradient(var(--bg) 75%,transparent);z-index:2}
+    nav a,.source{color:var(--text);text-decoration:none;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:9px 13px;white-space:nowrap}
+    figure{margin:18px 0 28px;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;scroll-margin-top:64px}
+    figcaption{font-weight:750;font-size:1.12rem;margin:0 0 10px}
+    figure a{display:block;background:#fff;border-radius:10px;overflow:auto}
+    img{display:block;width:100%;height:auto}
+    .hint{font-size:.9rem;margin-top:8px}
+    footer{padding:0 18px 28px;text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Louvre room-by-room route maps</h1>
+    <p>Step numbers match Trip mode. Solid blue stays on the same level. Dashed blue changes level. Tap a map to open the full-resolution image and pinch to zoom.</p>
+    <nav aria-label="Floor maps">
+      <a href="#level-minus-2">Level −2</a>
+      <a href="#level-minus-1">Level −1</a>
+      <a href="#level-0">Level 0</a>
+      <a href="#level-1">Level 1</a>
+      <a href="#level-2">Level 2</a>
+    </nav>
+  </header>
+  <main>
+    <figure id="level-minus-2">
+      <figcaption>Level −2 · Steps 1 and 13 · Hall Napoléon wing changes</figcaption>
+      <a href="louvre-route-level-minus-2.png"><img src="louvre-route-level-minus-2.png" alt="Annotated Louvre Level minus 2 route map"></a>
+      <p class="hint">Step 1 enters Sully. Step 13 crosses from Denon to Richelieu without leaving the museum.</p>
+    </figure>
+    <figure id="level-minus-1">
+      <figcaption>Level −1 · Steps 2–3, 13 and 20</figcaption>
+      <a href="louvre-route-level-minus-1.png"><img src="louvre-route-level-minus-1.png" alt="Annotated Louvre Level minus 1 route map"></a>
+      <p class="hint">Medieval rooms and room 338 are at the right. Cour Puget and Cour Marly are at the upper left.</p>
+    </figure>
+    <figure id="level-0">
+      <figcaption>Level 0 · Steps 5–6, 12 and 14–16</figcaption>
+      <a href="louvre-route-level-0.png"><img src="louvre-route-level-0.png" alt="Annotated Louvre Level 0 route map"></a>
+      <p class="hint">The blue Greek rooms, room 403 and the Near Eastern rooms are separate route segments.</p>
+    </figure>
+    <figure id="level-1">
+      <figcaption>Level 1 · Steps 4, 7–11 and 17–18</figcaption>
+      <a href="louvre-route-level-1.png"><img src="louvre-route-level-1.png" alt="Annotated Louvre Level 1 route map"></a>
+      <p class="hint">The Denon painting circuit is below. Room 635 and the Richelieu apartment loop are above.</p>
+    </figure>
+    <figure id="level-2">
+      <figcaption>Level 2 · Step 19</figcaption>
+      <a href="louvre-route-level-2.png"><img src="louvre-route-level-2.png" alt="Annotated Louvre Level 2 route map"></a>
+      <p class="hint">Use the room 800 landing for the out-and-back route to rooms 837 and 814.</p>
+    </figure>
+  </main>
+  <footer><a class="source" href="https://api-www.louvre.fr/sites/default/files/2026-05/2026-05_Plan_Louvre_EN.pdf">Open the unmodified official May 2026 map</a></footer>
+</body>
+</html>
