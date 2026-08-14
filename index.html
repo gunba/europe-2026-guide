@@ -7,7 +7,7 @@ const to64=value=>btoa(String.fromCharCode(...value));
 const rememberedUnlockKey='europe2026RememberedUnlock:v1';
 const documentSessionKey='europe2026DocumentKey';
 const button=document.getElementById('button'),status=document.getElementById('status'),passphraseInput=document.getElementById('passphrase'),rememberInput=document.getElementById('remember');
-const payloadPromise=fetch('./app.enc?v=6c023191e0cfe78d',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('The encrypted guide file is not available.');return r.json();});
+const payloadPromise=fetch('./app.enc?v=cd0bcbb4f2c192db',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('The encrypted guide file is not available.');return r.json();});
 const readRememberedKey=()=>{try{return localStorage.getItem(rememberedUnlockKey);}catch{return null;}};
 const saveRememberedKey=value=>{try{localStorage.setItem(rememberedUnlockKey,value);return true;}catch{return false;}};
 const clearRememberedKey=()=>{try{localStorage.removeItem(rememberedUnlockKey);}catch{}}
